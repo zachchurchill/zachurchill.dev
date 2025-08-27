@@ -1,0 +1,45 @@
+(function($) {
+    'use strict';
+    
+    // Store volunteer type data
+    var volunteerTypeData = {};
+    
+    // Fetch volunteer type data when page loads
+    $(document).ready(function() {
+        // Get volunteer type data from API
+        $.ajax({
+            url: '/admin/signups/volunteerform/volunteer-types/',
+            method: 'GET',
+            success: function(data) {
+                // Store volunteer type data
+                data.forEach(function(type) {
+                    volunteerTypeData[type.name] = type.description;
+                });
+            },
+            error: function() {
+                console.log('Could not fetch volunteer type data');
+            }
+        });
+        
+        // Handle volunteer type selection changes
+        $(document).on('change', 'select[name*="volunteer_type"]', function() {
+            var select = $(this);
+            var row = select.closest('tr');
+            var titleField = row.find('input[name*="title"]');
+            var descriptionField = row.find('textarea[name*="description"]');
+            var selectedOption = select.find('option:selected');
+            var selectedText = selectedOption.text();
+            
+            if (selectedText && selectedText !== '---------') {
+                // Auto-populate title with the volunteer type name
+                titleField.val(selectedText);
+                
+                // Auto-populate description from volunteer type data
+                if (volunteerTypeData[selectedText]) {
+                    descriptionField.val(volunteerTypeData[selectedText]);
+                }
+            }
+        });
+    });
+    
+})(django.jQuery);

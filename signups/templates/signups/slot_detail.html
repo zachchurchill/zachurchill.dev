@@ -1,0 +1,71 @@
+{% extends 'signups/base.html' %}
+
+{% block title %}{{ slot.title }} - Sign Up{% endblock %}
+{% block header %}{{ slot.title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>{{ slot.title }}</h2>
+    <p><strong>Date:</strong> {{ slot.date|date:"l, F j, Y" }}</p>
+    {% if slot.description %}
+        <p><strong>Description:</strong> {{ slot.description }}</p>
+    {% endif %}
+    <p><strong>Available Spots:</strong> {{ slot.available_spots }} of {{ slot.max_volunteers }}</p>
+</div>
+
+{% if slot.is_full %}
+<div class="card">
+    <div class="alert alert-error">
+        <strong>Sorry!</strong> This slot is already full. Please choose another volunteer opportunity.
+    </div>
+    <a href="{% url 'signups:volunteer_form_view' form.unique_url %}" class="btn">Back to All Slots</a>
+</div>
+{% else %}
+<div class="card">
+    <h3>Sign Up for This Slot</h3>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="{{ signup_form.family_choice.id_for_label }}">Select Family (Optional)</label>
+            {{ signup_form.family_choice }}
+            {% if signup_form.family_choice.errors %}
+                <div class="alert alert-error">{{ signup_form.family_choice.errors.0 }}</div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="{{ signup_form.name.id_for_label }}">Name *</label>
+            {{ signup_form.name }}
+            {% if signup_form.name.errors %}
+                <div class="alert alert-error">{{ signup_form.name.errors.0 }}</div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="{{ signup_form.email.id_for_label }}">Email *</label>
+            {{ signup_form.email }}
+            {% if signup_form.email.errors %}
+                <div class="alert alert-error">{{ signup_form.email.errors.0 }}</div>
+            {% endif %}
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button type="submit" class="btn btn-success">Sign Up</button>
+            <a href="{% url 'signups:volunteer_form_view' form.unique_url %}" class="btn" style="margin-left: 10px;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endif %}
+
+{% if signups %}
+<div class="card">
+    <h3>Current Signups</h3>
+    {% for signup in signups %}
+    <div class="signup-item">
+        <div class="signup-name">{{ signup.name }}</div>
+        <div class="signup-email">{{ signup.email }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zach Churchill - Vibe Coding Projects</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'home/css/main.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <h1>zach churchill</h1>
+            <p class="intro-text">
+                software developer exploring the intersection of human creativity and artificial intelligence. 
+                this portfolio showcases projects built with heavy use of genai tools like claude, chatgpt, and cursor.
+            </p>
+        </div>
+
+        <div class="project-grid">
+            <div class="project-card">
+                <h2 class="project-title">
+                    <a href="/signups">volunteer signup system</a>
+                    <span class="ai-badge">cursor</span>
+                </h2>
+                <p class="project-description">
+                    a django web application for managing volunteer opportunities in parent co-op schools. 
+                    features include family-based signups, admin portal, and public-facing forms.
+                </p>
+                <div class="project-tech">
+                    <strong>tech stack:</strong> django, python, modern css, sqlite
+                </div>
+                <div class="project-tech">
+                    <strong>ai tools used:</strong> cursor for rapid prototyping and development
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h2 class="project-title">
+                    more projects coming soon
+                    <span class="ai-badge">ai-powered</span>
+                </h2>
+                <p class="project-description">
+                    this portfolio will continue to grow with more vibe coding projects as i explore 
+                    new technologies and ai-assisted development workflows.
+                </p>
+                <div class="project-tech">
+                    <strong>development philosophy:</strong> rapid prototyping, ai collaboration, clean code
+                </div>
+            </div>
+        </div>
+
+        <footer style="margin-block-start: 4rem; text-align: center; color: var(--text-secondary); font-size: 0.875rem;">
+            <p>built with ❤️ and ai assistance</p>
+        </footer>
+    </div>
+</body>
+</html>

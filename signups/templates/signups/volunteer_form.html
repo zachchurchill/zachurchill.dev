@@ -1,0 +1,66 @@
+{% extends 'signups/base.html' %}
+
+{% block title %}{{ form.title }} - Volunteer Signup{% endblock %}
+{% block header %}{{ form.title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Volunteer Opportunities</h2>
+    <p>{{ form.description }}</p>
+</div>
+
+<div class="slot-grid">
+    {% for slot in slots %}
+    <div class="slot-card">
+        <div class="slot-header">
+            <div class="slot-title">{{ slot.title }}</div>
+            <div class="slot-status {% if slot.is_full %}status-full{% else %}status-available{% endif %}">
+                {% if slot.is_full %}
+                    Full
+                {% else %}
+                    {{ slot.available_spots }} spots left
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="slot-details">
+            <strong>Date:</strong> {{ slot.date|date:"l, F j, Y" }}<br>
+            {% if slot.description %}
+                <strong>Description:</strong> {{ slot.description }}
+            {% endif %}
+        </div>
+        
+        {% if slot.signups.all %}
+        <div class="signup-list">
+            <strong>Current Signups:</strong>
+            {% for signup in slot.signups.all %}
+            <div class="signup-item">
+                <div class="signup-name">{{ signup.name }}</div>
+                <div class="signup-email">{{ signup.email }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div style="margin-top: 15px;">
+            {% if slot.is_full %}
+                <button class="btn" disabled>Slot Full</button>
+            {% else %}
+                <a href="{% url 'signups:slot_detail' form.unique_url slot.id %}" class="btn btn-success">
+                    Sign Up
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="card">
+        <p>No volunteer slots are currently available.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card helper-text">
+    <h3>How to Sign Up</h3>
+    <p>Click on any available slot above to sign up. You'll need to provide your name and email address. Once you sign up, your name will appear in the signup list for that slot.</p>
+</div>
+{% endblock %}

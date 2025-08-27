@@ -1,0 +1,54 @@
+{% extends 'signups/base.html' %}
+
+{% block title %}Volunteer Signup System - Home{% endblock %}
+
+{% block header %}volunteer signup system{% endblock %}
+
+{% block content %}
+<div class="container">
+    <main class="main-content">
+        <section class="info-section">
+            <h2>welcome to the volunteer signup system</h2>
+            <p>
+                This platform helps parent co-op schools coordinate volunteer activities efficiently. 
+                Parents can easily sign up for available volunteer slots, and administrators can 
+                manage forms and track participation.
+            </p>
+        </section>
+
+        <section class="features-section">
+            <h2>key features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>family-based signups</h3>
+                    <p>Predefined families can be selected from a dropdown, or new families can be added on the fly.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>admin portal</h3>
+                    <p>Create and manage volunteer forms, slots, and track signups through an intuitive admin interface.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>public forms</h3>
+                    <p>Share unique URLs with parents for easy access to volunteer opportunities.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>volunteer types</h3>
+                    <p>Predefined volunteer types (like "Lawn Mowing", "Trash Duty") with auto-populated descriptions.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2>get started</h2>
+            <p>
+                If you have a volunteer form URL, you can access it directly. 
+                Administrators can log in to the admin portal to create and manage forms.
+            </p>
+            <div class="cta-buttons">
+                <a href="/admin/" class="btn btn-primary">admin portal</a>
+                <a href="{% url 'signups:volunteer_form_view' 'sample-form-for-volunteers' %}" class="btn btn-secondary">view example form</a>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}

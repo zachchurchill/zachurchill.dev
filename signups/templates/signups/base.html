@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Volunteer Signup{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'signups/css/main.css' %}">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            {% block header_content %}
+            <div class="header-content">
+                <a href="/" class="nav-back">← back to home</a>
+                <h1>{% block header %}Volunteer Signup{% endblock %}</h1>
+            </div>
+            {% endblock %}
+        </div>
+    </div>
+    
+    <div class="container">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </div>
+    
+    <script>
+    // Family selection functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const familySelect = document.getElementById('family-select');
+        const nameField = document.getElementById('name-field');
+        const emailField = document.getElementById('email-field');
+        
+        if (familySelect && nameField && emailField) {
+            // Fetch family data
+            fetch('/admin/signups/volunteerform/families/')
+                .then(response => response.json())
+                .then(families => {
+                    const familyData = {};
+                    families.forEach(family => {
+                        familyData[family.id] = {
+                            name: family.last_name + ' Family',
+                            email: family.email
+                        };
+                    });
+                    
+                    // Handle family selection
+                    familySelect.addEventListener('change', function() {
+                        const selectedFamilyId = this.value;
+                        if (selectedFamilyId && familyData[selectedFamilyId]) {
+                            nameField.value = familyData[selectedFamilyId].name;
+                            emailField.value = familyData[selectedFamilyId].email;
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.log('Could not fetch family data:', error);
+                });
+        }
+    });
+    </script>
+</body>
+</html>
