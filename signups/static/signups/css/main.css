@@ -307,6 +307,8 @@
   }
   
   .slot-card {
+    display: flex;
+    flex-direction: column;
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     padding: var(--space-md);
@@ -331,10 +333,22 @@
   }
   
   .slot-status {
+    margin-left: var(--space-xs);
     padding: var(--space-xs) var(--space-sm);
     border-radius: 1rem;
     font-size: 0.75rem;
     font-weight: 600;
+    text-align: center;
+    min-width: 80px
+  }
+
+  .slot-action {
+    margin-top: auto;
+    text-align: center;
+  }
+
+  .slot-action .btn {
+    width: 100%;
   }
   
   .status-available {
@@ -375,6 +389,23 @@
   .signup-email {
     color: var(--text-secondary);
     font-size: 0.75rem;
+  }
+  
+  .form-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block-start: var(--space-lg);
+    gap: var(--space-md);
+  }
+  
+  .form-buttons .btn {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .form-buttons .btn-success {
+    flex: 1.5;
   }
   
   .messages {
@@ -573,15 +604,6 @@
     text-align: center;
     font-size: 1.1rem;
     color: #1565c0;
-  }
-  
-  .credit-hours-info {
-    background: #f3e5f5;
-    border: 1px solid #ce93d8;
-    border-radius: var(--border-radius-sm);
-    padding: var(--space-md);
-    margin-block: var(--space-md);
-    color: #7b1fa2;
   }
   
   .signup-benefit {

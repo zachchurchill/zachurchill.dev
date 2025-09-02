@@ -3,14 +3,16 @@
 {% block title %}{{ slot.title }} - Sign Up{% endblock %}
 {% block header %}{{ slot.title }}{% endblock %}
 
+{% block navigation %}
+<a href="{% url 'signups:volunteer_form_view' form.unique_url %}" class="nav-back">← back to form</a>
+{% endblock %}
+
 {% block content %}
 <div class="card">
     <h2>{{ slot.title }}</h2>
     <p><strong>Date:</strong> {{ slot.date|date:"l, F j, Y" }}</p>
     {% if slot.volunteer_type and slot.volunteer_type.credit_hours %}
-    <div class="credit-hours-info">
-        <strong>Credit Hours:</strong> {{ slot.volunteer_type.credit_hours }} hours
-    </div>
+    <p><strong>Credit Hours:</strong> {{ slot.volunteer_type.credit_hours }} hours
     {% endif %}
     {% if slot.description %}
         <p><strong>Description:</strong> {{ slot.description }}</p>
@@ -47,9 +49,9 @@
             {% endif %}
         </div>
         
-        <div style="margin-top: 20px;">
+        <div class="form-buttons">
+            <a href="{% url 'signups:volunteer_form_view' form.unique_url %}" class="btn">Cancel</a>
             <button type="submit" class="btn btn-success">Sign Up</button>
-            <a href="{% url 'signups:volunteer_form_view' form.unique_url %}" class="btn" style="margin-left: 10px;">Cancel</a>
         </div>
     </form>
 </div>

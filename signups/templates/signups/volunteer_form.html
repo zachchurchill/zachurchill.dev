@@ -18,7 +18,7 @@
                 {% if slot.is_full %}
                     Full
                 {% else %}
-                    {{ slot.available_spots }} spots left
+                    {{ slot.available_spots }} spot{{ slot.available_spots|pluralize }} left
                 {% endif %}
             </div>
         </div>
@@ -45,7 +45,7 @@
         </div>
         {% endif %}
         
-        <div style="margin-top: 15px;">
+        <div class="slot-action">
             {% if slot.is_full %}
                 <button class="btn" disabled>Slot Full</button>
             {% else %}

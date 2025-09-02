@@ -12,7 +12,9 @@
         <div class="container">
             {% block header_content %}
             <div class="header-content">
+                {% block navigation %}
                 <a href="/" class="nav-back">← back to home</a>
+                {% endblock %}
                 <h1>{% block header %}Volunteer Signup{% endblock %}</h1>
             </div>
             {% endblock %}
