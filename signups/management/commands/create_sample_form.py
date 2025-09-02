@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import date
-from signups.models import VolunteerForm, VolunteerSlot, VolunteerType, Family
+from signups.models import VolunteerForm, VolunteerSlot, VolunteerType
 
 class Command(BaseCommand):
     help = 'Create a sample volunteer form with URL "sample-form-for-volunteers"'
@@ -57,38 +57,6 @@ class Command(BaseCommand):
             )
             if created:
                 self.stdout.write(f'Created volunteer type: {volunteer_type.name}')
-
-        # Create sample families if they don't exist
-        families_data = [
-            {
-                'last_name': 'Smith',
-                'email': 'smith@example.com',
-            },
-            {
-                'last_name': 'Johnson',
-                'email': 'johnson@example.com',
-            },
-            {
-                'last_name': 'Williams',
-                'email': 'williams@example.com',
-            },
-            {
-                'last_name': 'Brown',
-                'email': 'brown@example.com',
-            },
-            {
-                'last_name': 'Davis',
-                'email': 'davis@example.com',
-            },
-        ]
-
-        for family_data in families_data:
-            family, created = Family.objects.get_or_create(
-                last_name=family_data['last_name'],
-                defaults=family_data
-            )
-            if created:
-                self.stdout.write(f'Created family: {family.last_name}')
 
         # Create the sample volunteer form with specific URL
         form, created = VolunteerForm.objects.get_or_create(

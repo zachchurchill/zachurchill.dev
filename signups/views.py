@@ -3,7 +3,7 @@ from django.http import Http404, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
-from .models import VolunteerForm, VolunteerSlot, VolunteerSignup, Family
+from .models import VolunteerForm, VolunteerSlot, VolunteerSignup
 from .forms import VolunteerSignupForm
 import json
 
@@ -38,16 +38,6 @@ def volunteer_slot_detail(request, unique_url, slot_id):
                 # Create the signup
                 signup = signup_form.save(commit=False)
                 signup.slot = slot
-                
-                # Handle family selection
-                family_choice = signup_form.cleaned_data.get('family_choice')
-                if family_choice:
-                    try:
-                        family = Family.objects.get(id=family_choice)
-                        signup.family = family
-                    except Family.DoesNotExist:
-                        pass
-                
                 signup.save()
                 messages.success(request, f'Successfully signed up for {slot.title}!')
                 return redirect('signups:volunteer_form_view', unique_url=unique_url)

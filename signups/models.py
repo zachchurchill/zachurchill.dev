@@ -3,19 +3,6 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 import uuid
 
-class Family(models.Model):
-    """Predefined families that can sign up for volunteer slots"""
-    last_name = models.CharField(max_length=100, help_text="Family's last name")
-    email = models.EmailField(help_text="Primary email address for the family")
-    is_active = models.BooleanField(default=True, help_text="Whether this family is active and can sign up")
-    
-    def __str__(self):
-        return f"{self.last_name} Family"
-    
-    class Meta:
-        ordering = ['last_name']
-        verbose_name_plural = "Families"
-
 class VolunteerType(models.Model):
     """Predefined volunteer task types with descriptions"""
     name = models.CharField(max_length=200, help_text="Name of the volunteer task type")
@@ -77,7 +64,6 @@ class VolunteerSlot(models.Model):
 class VolunteerSignup(models.Model):
     """Individual volunteer signups for slots"""
     slot = models.ForeignKey(VolunteerSlot, on_delete=models.CASCADE, related_name='signups')
-    family = models.ForeignKey(Family, on_delete=models.SET_NULL, null=True, blank=True, help_text="Predefined family (optional)")
     name = models.CharField(max_length=100, help_text="Name of the volunteer")
     email = models.EmailField(help_text="Email address of the volunteer")
     phone = models.CharField(max_length=20, blank=True, help_text="Phone number (optional)")

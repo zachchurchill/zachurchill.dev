@@ -25,13 +25,6 @@
     <h3>Sign Up for This Slot</h3>
     <form method="post">
         {% csrf_token %}
-        <div>
-            <label for="{{ signup_form.family_choice.id_for_label }}">Select Family (Optional)</label>
-            {{ signup_form.family_choice }}
-            {% if signup_form.family_choice.errors %}
-                <div class="alert alert-error">{{ signup_form.family_choice.errors.0 }}</div>
-            {% endif %}
-        </div>
         
         <div>
             <label for="{{ signup_form.name.id_for_label }}">Name *</label>

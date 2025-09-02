@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from django.http import JsonResponse
 from django.urls import path
 from django.template.response import TemplateResponse
-from .models import VolunteerForm, VolunteerSlot, VolunteerSignup, VolunteerType, Family
+from .models import VolunteerForm, VolunteerSlot, VolunteerSignup, VolunteerType
 
 class VolunteerSignupInline(admin.TabularInline):
     model = VolunteerSignup
@@ -29,17 +29,12 @@ class VolunteerFormAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         custom_urls = [
             path('volunteer-types/', self.admin_site.admin_view(self.get_volunteer_types), name='volunteer-types'),
-            path('families/', self.admin_site.admin_view(self.get_families), name='families'),
         ]
         return custom_urls + urls
     
     def get_volunteer_types(self, request):
         volunteer_types = VolunteerType.objects.filter(is_active=True).values('id', 'name', 'description')
         return JsonResponse(list(volunteer_types), safe=False)
-    
-    def get_families(self, request):
-        families = Family.objects.filter(is_active=True).values('id', 'last_name', 'email')
-        return JsonResponse(list(families), safe=False)
     
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
@@ -82,9 +77,9 @@ class VolunteerSlotAdmin(admin.ModelAdmin):
 
 @admin.register(VolunteerSignup)
 class VolunteerSignupAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email', 'family', 'slot', 'form_title', 'signed_up_at']
-    list_filter = ['signed_up_at', 'slot__date', 'slot__form', 'family']
-    search_fields = ['name', 'email', 'slot__title', 'slot__form__title', 'family__last_name']
+    list_display = ['name', 'email', 'slot', 'form_title', 'signed_up_at']
+    list_filter = ['signed_up_at', 'slot__date', 'slot__form']
+    search_fields = ['name', 'email', 'slot__title', 'slot__form__title']
     readonly_fields = ['signed_up_at']
     
     def form_title(self, obj):
@@ -93,13 +88,6 @@ class VolunteerSignupAdmin(admin.ModelAdmin):
     
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('slot', 'slot__form')
-
-@admin.register(Family)
-class FamilyAdmin(admin.ModelAdmin):
-    list_display = ['last_name', 'email', 'is_active']
-    list_filter = ['is_active']
-    search_fields = ['last_name', 'email']
-    ordering = ['last_name']
 
 @admin.register(VolunteerType)
 class VolunteerTypeAdmin(admin.ModelAdmin):
