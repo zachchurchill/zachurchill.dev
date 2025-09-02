@@ -17,9 +17,13 @@ def volunteer_form_view(request, unique_url):
     # Force ordering by date, then by title for slots with same date
     slots = form.slots.all().order_by('date', 'title')
     
+    # Calculate total credit hours for the form
+    total_credit_hours = form.get_total_credit_hours()
+    
     context = {
         'form': form,
         'slots': slots,
+        'total_credit_hours': total_credit_hours,
     }
     return render(request, 'signups/volunteer_form.html', context)
 
@@ -44,11 +48,17 @@ def volunteer_slot_detail(request, unique_url, slot_id):
     else:
         signup_form = VolunteerSignupForm()
     
+    # Calculate credit hours for this slot
+    slot_credit_hours = slot.get_total_credit_hours()
+    individual_credit_hours = slot.volunteer_type.credit_hours if slot.volunteer_type else 0
+    
     context = {
         'form': form,
         'slot': slot,
         'signup_form': signup_form,
         'signups': slot.signups.all(),
+        'slot_credit_hours': slot_credit_hours,
+        'individual_credit_hours': individual_credit_hours,
     }
     return render(request, 'signups/slot_detail.html', context)
 
@@ -97,8 +107,12 @@ def form_summary(request, unique_url):
     form = get_object_or_404(VolunteerForm, unique_url=unique_url)
     slots = form.slots.all().order_by('date')
     
+    # Calculate total credit hours for the form
+    total_credit_hours = form.get_total_credit_hours()
+    
     context = {
         'form': form,
         'slots': slots,
+        'total_credit_hours': total_credit_hours,
     }
     return render(request, 'signups/form_summary.html', context)

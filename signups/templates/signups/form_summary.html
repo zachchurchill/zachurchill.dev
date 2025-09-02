@@ -1,0 +1,68 @@
+{% extends 'signups/base.html' %}
+
+{% block title %}{{ form.title }} - Summary{% endblock %}
+{% block header %}{{ form.title }} - Summary{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Form Summary</h2>
+    <p><strong>Description:</strong> {{ form.description }}</p>
+    <p><strong>Status:</strong> {% if form.is_active %}Active{% else %}Inactive{% endif %}</p>
+    {% if total_credit_hours > 0 %}
+    <div class="credit-hours-summary">
+        <strong>Total Credit Hours Earned:</strong> {{ total_credit_hours|floatformat:2 }} hours
+    </div>
+    {% endif %}
+</div>
+
+{% if slots %}
+<div class="slots-summary">
+    <h3>Volunteer Slots</h3>
+    {% for slot in slots %}
+    <div class="slot-summary-card">
+        <div class="slot-header">
+            <h4>{{ slot.title }}</h4>
+            <div class="slot-date">{{ slot.date|date:"l, F j, Y" }}</div>
+        </div>
+        
+        <div class="slot-details">
+            {% if slot.volunteer_type and slot.volunteer_type.credit_hours %}
+            <p><strong>Credit Hours:</strong> {{ slot.volunteer_type.credit_hours }} hours per person</p>
+            {% endif %}
+            <p><strong>Signups:</strong> {{ slot.current_signups }} of {{ slot.max_volunteers }}</p>
+            {% if slot.description %}
+            <p><strong>Description:</strong> {{ slot.description }}</p>
+            {% endif %}
+        </div>
+        
+        {% if slot.signups.all %}
+        <div class="signups-list">
+            <h5>Current Signups:</h5>
+            {% for signup in slot.signups.all %}
+            <div class="signup-summary-item">
+                <span class="signup-name">{{ signup.name }}</span>
+                <span class="signup-email">{{ signup.email }}</span>
+                <span class="signup-date">{{ signup.signed_up_at|date:"M j, Y" }}</span>
+                {% if slot.volunteer_type and slot.volunteer_type.credit_hours %}
+                <span class="signup-credits">{{ slot.volunteer_type.credit_hours }} hours</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="no-signups">No signups yet</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card">
+    <p>No volunteer slots have been created for this form yet.</p>
+</div>
+{% endif %}
+
+<div class="card">
+    <a href="{% url 'signups:volunteer_form_view' form.unique_url %}" class="btn">View Public Form</a>
+    <a href="{% url 'admin:signups_volunteerform_change' form.id %}" class="btn">Edit in Admin</a>
+</div>
+{% endblock %}

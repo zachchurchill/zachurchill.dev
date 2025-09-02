@@ -8,6 +8,12 @@ class VolunteerType(models.Model):
     """Predefined volunteer task types with descriptions"""
     name = models.CharField(max_length=200, help_text="Name of the volunteer task type")
     description = models.TextField(help_text="Standard description for this type of volunteer task")
+    credit_hours = models.DecimalField(
+        max_digits=4, 
+        decimal_places=2, 
+        default=1.0,
+        help_text="Number of credit hours this activity is worth (e.g., 1.0 for lawn mowing, 0.5 for towel washing)"
+    )
     is_active = models.BooleanField(default=True, help_text="Whether this volunteer type is available for use")
     
     def __str__(self):
@@ -38,6 +44,14 @@ class VolunteerForm(models.Model):
         """Generate the full URL for this volunteer form"""
         return reverse('signups:volunteer_form_view', kwargs={'unique_url': self.unique_url})
     
+    def get_total_credit_hours(self):
+        """Calculate total credit hours earned across all signups"""
+        total_hours = 0
+        for slot in self.slots.all():
+            for signup in slot.signups.all():
+                total_hours += signup.get_credit_hours()
+        return total_hours
+    
     def __str__(self):
         return self.title
     
@@ -63,6 +77,12 @@ class VolunteerSlot(models.Model):
     def available_spots(self):
         return max(0, self.max_volunteers - self.current_signups)
     
+    def get_total_credit_hours(self):
+        """Calculate total credit hours for this slot based on signups"""
+        if self.volunteer_type:
+            return self.current_signups * self.volunteer_type.credit_hours
+        return 0
+    
     class Meta:
         ordering = ['date']
 
@@ -77,6 +97,12 @@ class VolunteerSignup(models.Model):
     
     def __str__(self):
         return f"{self.name} - {self.slot.title}"
+    
+    def get_credit_hours(self):
+        """Get the credit hours earned for this signup"""
+        if self.slot.volunteer_type:
+            return self.slot.volunteer_type.credit_hours
+        return 0
     
     def save(self, *args, **kwargs):
         # Update the current_signups count when a signup is created

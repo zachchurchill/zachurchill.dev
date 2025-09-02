@@ -562,4 +562,141 @@
     background: var(--color-primary);
     color: var(--color-surface);
   }
+  
+  /* Credit Hours Styling */
+  .credit-hours-summary {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border: 1px solid #90caf9;
+    border-radius: var(--border-radius-sm);
+    padding: var(--space-md);
+    margin-block-start: var(--space-md);
+    text-align: center;
+    font-size: 1.1rem;
+    color: #1565c0;
+  }
+  
+  .credit-hours-info {
+    background: #f3e5f5;
+    border: 1px solid #ce93d8;
+    border-radius: var(--border-radius-sm);
+    padding: var(--space-md);
+    margin-block: var(--space-md);
+    color: #7b1fa2;
+  }
+  
+  .signup-benefit {
+    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+    border: 1px solid #a5d6a7;
+    border-radius: var(--border-radius-sm);
+    padding: var(--space-md);
+    margin-block-end: var(--space-md);
+    text-align: center;
+    color: #2e7d32;
+    font-size: 1.1rem;
+  }
+  
+  .signup-benefit strong {
+    color: #1b5e20;
+  }
+  
+  /* Form Summary Styling */
+  .slots-summary {
+    margin-block-start: var(--space-lg);
+  }
+  
+  .slot-summary-card {
+    background: var(--highlight-high);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin-block-end: var(--space-md);
+  }
+  
+  .slot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block-end: var(--space-md);
+    padding-block-end: var(--space-sm);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+  
+  .slot-header h4 {
+    margin: 0;
+    color: var(--color-primary);
+  }
+  
+  .slot-date {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  
+  .signups-list {
+    margin-block-start: var(--space-md);
+    padding-block-start: var(--space-md);
+    border-top: 1px solid var(--color-border-light);
+  }
+  
+  .signups-list h5 {
+    margin: 0 0 var(--space-sm) 0;
+    color: var(--text-color);
+    font-size: 1rem;
+  }
+  
+  .signup-summary-item {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 1fr;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    background: white;
+    border-radius: var(--border-radius-sm);
+    margin-block-end: var(--space-xs);
+    font-size: 0.9rem;
+    align-items: center;
+  }
+  
+  .signup-summary-item .signup-name {
+    font-weight: 600;
+    color: var(--text-color);
+  }
+  
+  .signup-summary-item .signup-email {
+    color: var(--text-secondary);
+  }
+  
+  .signup-summary-item .signup-date {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+  }
+  
+  .signup-summary-item .signup-credits {
+    background: var(--color-primary);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  .no-signups {
+    color: var(--text-secondary);
+    font-style: italic;
+    text-align: center;
+    padding: var(--space-md);
+  }
+  
+  @media (max-width: 768px) {
+    .signup-summary-item {
+      grid-template-columns: 1fr;
+      gap: var(--space-xs);
+      text-align: center;
+    }
+    
+    .slot-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-xs);
+    }
+  }
 }

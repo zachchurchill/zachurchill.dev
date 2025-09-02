@@ -105,11 +105,18 @@ class VolunteerFormAdmin(admin.ModelAdmin):
 
 @admin.register(VolunteerSlot)
 class VolunteerSlotAdmin(admin.ModelAdmin):
-    list_display = ['title', 'volunteer_type', 'form', 'date', 'current_signups', 'max_volunteers', 'is_full']
+    list_display = ['title', 'volunteer_type', 'form', 'date', 'current_signups', 'max_volunteers', 'credit_hours', 'is_full']
     list_filter = ['date', 'form', 'form__is_active', 'volunteer_type']
     search_fields = ['title', 'description', 'form__title', 'volunteer_type__name']
-    readonly_fields = ['current_signups']
+    readonly_fields = ['current_signups', 'credit_hours']
     inlines = [VolunteerSignupInline]
+    
+    def credit_hours(self, obj):
+        """Display credit hours for this slot"""
+        if obj.volunteer_type:
+            return f"{obj.volunteer_type.credit_hours} hours"
+        return "No type set"
+    credit_hours.short_description = 'Credit Hours'
     
 
     
@@ -123,21 +130,36 @@ class VolunteerSlotAdmin(admin.ModelAdmin):
 
 @admin.register(VolunteerSignup)
 class VolunteerSignupAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email', 'slot', 'form_title', 'signed_up_at']
+    list_display = ['name', 'email', 'slot', 'form_title', 'credit_hours', 'signed_up_at']
     list_filter = ['signed_up_at', 'slot__date', 'slot__form']
     search_fields = ['name', 'email', 'slot__title', 'slot__form__title']
-    readonly_fields = ['signed_up_at']
+    readonly_fields = ['signed_up_at', 'credit_hours']
     
     def form_title(self, obj):
         return obj.slot.form.title
     form_title.short_description = 'Form'
+    
+    def credit_hours(self, obj):
+        """Display credit hours earned for this signup"""
+        hours = obj.get_credit_hours()
+        return f"{hours:.2f} hours"
+    credit_hours.short_description = 'Credit Hours'
     
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('slot', 'slot__form')
 
 @admin.register(VolunteerType)
 class VolunteerTypeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'is_active']
-    list_filter = ['is_active']
+    list_display = ['name', 'credit_hours', 'is_active']
+    list_filter = ['is_active', 'credit_hours']
     search_fields = ['name', 'description']
     ordering = ['name']
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'description', 'is_active')
+        }),
+        ('Credit Hours', {
+            'fields': ('credit_hours',),
+            'description': 'Set the number of credit hours this volunteer activity is worth'
+        }),
+    )

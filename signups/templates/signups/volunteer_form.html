@@ -25,6 +25,9 @@
         
         <div class="slot-details">
             <strong>Date:</strong> {{ slot.date|date:"l, F j, Y" }}<br>
+            {% if slot.volunteer_type and slot.volunteer_type.credit_hours %}
+            <strong>Credit Hours:</strong> {{ slot.volunteer_type.credit_hours }} hours<br>
+            {% endif %}
             {% if slot.description %}
                 <strong>Description:</strong> {{ slot.description }}
             {% endif %}
@@ -62,5 +65,8 @@
 <div class="card helper-text">
     <h3>How to Sign Up</h3>
     <p>Click on any available slot above to sign up. You'll need to provide your name and email address. Once you sign up, your name will appear in the signup list for that slot.</p>
+    {% if total_credit_hours > 0 %}
+    <p><strong>Credit Hours:</strong> Each volunteer activity earns credit hours based on the type of work. These credits help track your contribution to the co-op community.</p>
+    {% endif %}
 </div>
 {% endblock %}
