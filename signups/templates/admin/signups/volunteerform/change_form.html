@@ -1,6 +1,30 @@
 {% extends "admin/change_form.html" %}
 {% load static %}
 
+{% block field_sets %}
+{% if original.unique_url %}
+<div class="module aligned">
+    <h2>Form Access</h2>
+    <div class="form-row">
+        <div>
+            <label>Form Link:</label>
+            <div class="readonly">
+                <a href="{{ original.get_form_url }}" target="_blank" style="font-size: 16px; font-weight: bold; color: #007cba; text-decoration: none; padding: 8px 12px; border: 2px solid #007cba; border-radius: 4px; display: inline-block;">
+                    🔗 Open Volunteer Form
+                </a>
+                <br><br>
+                <small style="color: #666;">
+                    <strong>Unique URL:</strong> {{ original.unique_url }}<br>
+                    <strong>Full URL:</strong> <a href="{{ original.get_form_url }}" target="_blank">{{ original.get_form_url }}</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{{ block.super }}
+{% endblock %}
+
 {% block extrahead %}
 {{ block.super }}
 <script type="text/javascript">

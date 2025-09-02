@@ -3,6 +3,8 @@ from django.utils.html import format_html
 from django.http import JsonResponse
 from django.urls import path
 from django.template.response import TemplateResponse
+from django.contrib import messages
+from django.shortcuts import redirect
 from .models import VolunteerForm, VolunteerSlot, VolunteerSignup, VolunteerType
 
 class VolunteerSignupInline(admin.TabularInline):
@@ -19,10 +21,24 @@ class VolunteerSlotInline(admin.TabularInline):
 
 @admin.register(VolunteerForm)
 class VolunteerFormAdmin(admin.ModelAdmin):
-    list_display = ['title', 'created_by', 'created_at', 'is_active', 'unique_url', 'total_slots', 'total_signups']
+    list_display = ['title', 'created_by', 'created_at', 'is_active', 'form_link', 'total_slots', 'total_signups']
     list_filter = ['is_active', 'created_at', 'created_by']
     search_fields = ['title', 'description']
-    readonly_fields = ['unique_url', 'created_at', 'updated_at']
+    readonly_fields = ['unique_url', 'form_link', 'created_at', 'updated_at']
+    actions = ['open_form', 'copy_form_url']
+    fieldsets = (
+        ('Form Information', {
+            'fields': ('title', 'description', 'is_active', 'created_by')
+        }),
+        ('Form Access', {
+            'fields': ('unique_url', 'form_link'),
+            'classes': ('collapse',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
     inlines = [VolunteerSlotInline]
     
     def get_urls(self):
@@ -56,6 +72,36 @@ class VolunteerFormAdmin(admin.ModelAdmin):
     
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('created_by')
+
+    def form_link(self, obj):
+        """Display a clickable link to the volunteer form"""
+        if obj.unique_url:
+            url = obj.get_form_url()
+            return format_html(
+                '<a href="{}" target="_blank" style="background: #007cba; color: white; padding: 4px 8px; border-radius: 3px; text-decoration: none; font-size: 12px;">🔗 Open Form</a><br><small style="color: #666;">{}</small>',
+                url, obj.unique_url
+            )
+        return obj.unique_url
+    form_link.short_description = 'Form Link'
+    form_link.admin_order_field = 'unique_url'
+    
+    def open_form(self, request, queryset):
+        """Admin action to open the volunteer form in a new tab"""
+        if queryset.count() == 1:
+            form = queryset.first()
+            return redirect(form.get_form_url())
+        else:
+            messages.warning(request, 'Please select only one form to open.')
+    open_form.short_description = "Open selected form"
+    
+    def copy_form_url(self, request, queryset):
+        """Admin action to copy form URL to clipboard (shows message)"""
+        if queryset.count() == 1:
+            form = queryset.first()
+            messages.success(request, f'Form URL copied: {form.get_form_url()}')
+        else:
+            messages.warning(request, 'Please select only one form to copy URL.')
+    copy_form_url.short_description = "Copy form URL"
 
 @admin.register(VolunteerSlot)
 class VolunteerSlotAdmin(admin.ModelAdmin):

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.urls import reverse
 import uuid
 
 class VolunteerType(models.Model):
@@ -32,6 +33,10 @@ class VolunteerForm(models.Model):
             unique_id = str(uuid.uuid4())[:8]  # First 8 chars of UUID
             self.unique_url = f"{base_slug}-{unique_id}"
         super().save(*args, **kwargs)
+    
+    def get_form_url(self):
+        """Generate the full URL for this volunteer form"""
+        return reverse('signups:volunteer_form_view', kwargs={'unique_url': self.unique_url})
     
     def __str__(self):
         return self.title
