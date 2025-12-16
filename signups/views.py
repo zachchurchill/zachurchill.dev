@@ -1,10 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import Http404, JsonResponse
-from django.views.decorators.http import require_http_methods
+from django.http import Http404
 from django.contrib import messages
 from .models import VolunteerForm, VolunteerSlot, VolunteerSignup
 from .forms import VolunteerSignupForm
-import json
 
 def home(request):
     """Display the home page for the signups app"""
@@ -60,45 +58,6 @@ def volunteer_slot_detail(request, unique_url, slot_id):
         'individual_credit_hours': individual_credit_hours,
     }
     return render(request, 'signups/slot_detail.html', context)
-
-@require_http_methods(["POST"])
-def ajax_signup(request, unique_url, slot_id):
-    """Handle AJAX signup requests"""
-    try:
-        form = get_object_or_404(VolunteerForm, unique_url=unique_url, is_active=True)
-        slot = get_object_or_404(VolunteerSlot, id=slot_id, form=form)
-        
-        data = json.loads(request.body)
-        signup_form = VolunteerSignupForm(data)
-        
-        if signup_form.is_valid():
-            if slot.is_full():
-                return JsonResponse({
-                    'success': False,
-                    'message': 'Sorry, this slot is already full.'
-                })
-            
-            signup = signup_form.save(commit=False)
-            signup.slot = slot
-            signup.save()
-            
-            return JsonResponse({
-                'success': True,
-                'message': f'Successfully signed up for {slot.title}!',
-                'available_spots': slot.available_spots(),
-                'current_signups': slot.current_signups
-            })
-        else:
-            return JsonResponse({
-                'success': False,
-                'message': 'Please correct the errors below.',
-                'errors': signup_form.errors
-            })
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'message': 'An error occurred. Please try again.'
-        })
 
 def form_summary(request, unique_url):
     """Display a summary of all signups for a form (admin view)"""
