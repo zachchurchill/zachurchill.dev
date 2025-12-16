@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from .models import VolunteerForm, VolunteerSlot, VolunteerSignup
@@ -62,7 +61,6 @@ def volunteer_slot_detail(request, unique_url, slot_id):
     }
     return render(request, 'signups/slot_detail.html', context)
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def ajax_signup(request, unique_url, slot_id):
     """Handle AJAX signup requests"""
